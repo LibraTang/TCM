@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tcm.community.mapper.PostDetailMapper">
+    <sql id="allCol">
+        pid,uid,isdel,ctime,mtime,word,img,video,audio,tag,title,top
+    </sql>
+    <sql id="noIdCol">
+        uid,isdel,ctime,mtime,word,img,video,audio,tag,title,top
+    </sql>
+
+    <!--select-->
+    <select id="findByPid" parameterType="Integer" resultType="com.tcm.community.model.PostDetail">
+        select <include refid="allCol"></include>
+         from tcm_post_detail
+         where pid=#{pid};
+    </select>
+    <select id="getPostList" resultType="com.tcm.community.model.PostDetail">
+        select <include refid="allCol"></include>
+        from tcm_post_detail
+        where isdel!=1;
+    </select>
+    <select id="findByUid" parameterType="Integer" resultType="com.tcm.community.model.PostDetail">
+        select <include refid="allCol"></include>
+        from tcm_post_detail
+        where uid in
+        <foreach collection="collection" index="index" item="uid" open="(" separator="," close=")">
+            #{uid}
+        </foreach>
+    </select>
+
+    <!--insert-->
+    <insert id="insertPostDetail" parameterType="com.tcm.community.model.PostDetail">
+        <!--after operation:get uid-->
+        <selectKey keyProperty="pid" keyColumn="pid" order="AFTER" resultType="Long">
+            select last_insert_id();
+        </selectKey>
+        insert into tcm_post_detail (<include refid="noIdCol"></include>)
+        values (#{uid},#{isdel},#{ctime},#{mtime},#{word},#{img},#{video},#{audio},#{tag},#{title},#{top});
+    </insert>
+
+    <!--update-->
+    <update id="updatePostDetail" parameterType="com.tcm.community.model.PostDetail">
+        update tcm_post_detail set mtime=#{mtime},word=#{word},img=#{img},video=#{video},audio=#{audio},tag=#{tag},title=#{title}  where pid=#{pid};
+    </update>
+
+    <!--delete-->
+    <delete id="deletePostDetail" parameterType="Integer">
+        update tcm_post_detail set isdel=1 where pid=#{pid};
+    </delete>
+
+</mapper>

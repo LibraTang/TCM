@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tcm.community.mapper.UserAccMapper">
+    <sql id="allCol">
+        uid,uname,pword,name,auth,isdel,salt
+    </sql>
+    <sql id="noIdCol">
+        uname,pword,name,auth,isdel,salt
+    </sql>
+
+    <!--select-->
+    <select id="findById" parameterType="Integer" resultType="com.tcm.community.model.UserAcc">
+        select <include refid="allCol"></include>
+         from tcm_user_acc
+         where uid=#{uid};
+    </select>
+    <select id="findByUname" parameterType="string" resultType="com.tcm.community.model.UserAcc">
+        select <include refid="allCol"></include>
+         from tcm_user_acc
+         where uname=#{uname};
+    </select>
+    <select id="findByName" parameterType="string" resultType="com.tcm.community.model.UserAcc">
+        select <include refid="allCol"></include>
+         from tcm_user_acc
+         where uname like #{uname};
+    </select>
+
+    <!--insert-->
+    <insert id="insertUserAcc" parameterType="com.tcm.community.model.UserAcc">
+        <!--after operation:get uid-->
+        <selectKey keyProperty="uid" keyColumn="uid" order="AFTER" resultType="Integer">
+            select last_insert_id();
+        </selectKey>
+        insert into tcm_user_acc (<include refid="noIdCol"></include>)
+         values (#{uname},#{pword},#{name},#{auth},#{isdel},#{salt});
+    </insert>
+
+    <!--update-->
+    <update id="updateUserAcc" parameterType="com.tcm.community.model.UserAcc">
+        update tcm_user_acc set uname=#{uname},pword=#{pword},name=#{name},auth=#{auth},isdel=#{isdel},salt=#{salt} where uid=#{uid};
+    </update>
+    <update id="updatePwordSalt" parameterType="com.tcm.community.model.UserAcc">
+        update tcm_user_acc set pword=#{pword},salt=#{salt} where uid=#{uid};
+    </update>
+    <update id="updateName" parameterType="com.tcm.community.model.UserAcc">
+        update tcm_user_acc set name=#{name} where uid=#{uid};
+    </update>
+    <update id="updateAuth" parameterType="com.tcm.community.model.UserAcc">
+        update tcm_user_acc set auth=#{auth} where uid=#{uid};
+    </update>
+    <update id="updateUnameIsdel" parameterType="com.tcm.community.model.UserAcc">
+        update tcm_user_acc set uname=#{uname},isdel=#{isdel} where uid=#{uid};
+    </update>
+
+    <!--delete-->
+    <delete id="deleteUserAcc" parameterType="Integer">
+        <!--delete from tcm_user_acc where uid=#{uid};-->
+        update tcm_user_acc set isdel=#{isdel} where uid=#{uid};
+    </delete>
+
+</mapper>

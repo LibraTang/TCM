@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tcm.community.mapper.InquiryPrescriptionMapper">
+    <sql id="allCol">
+        ipid,idid,content,ctime,utime,mark
+    </sql>
+    <sql id="noIdCol">
+        idid,content,ctime,utime,mark
+    </sql>
+
+    <!--select-->
+    <select id="getInquiryPrescriptionByIdid" parameterType="Integer" resultType="com.tcm.community.model.InquiryPrescription">
+        select <include refid="allCol"></include>
+        from tcm_inquiry_prescription
+        where idid=#{idid}
+    </select>
+
+    <!--insert-->
+    <insert id="insertInquiryPrescription" parameterType="com.tcm.community.model.InquiryPrescription">
+        <!--after operation:get idid-->
+        <selectKey keyProperty="ipid" order="AFTER" resultType="Integer">
+            select last_insert_id();
+        </selectKey>
+        insert into tcm_inquiry_prescription (<include refid="noIdCol"></include>)
+        values (#{idid},#{content},now(),now(),0)
+        ON DUPLICATE KEY
+        UPDATE content=#{content}, utime=now();
+    </insert>
+
+    <!--update-->
+
+</mapper>

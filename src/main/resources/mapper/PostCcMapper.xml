@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tcm.community.mapper.PostCcMapper">
+    <sql id="allCol">
+        pcccid,pcmid,tpcmid,uid
+    </sql>
+    <sql id="noIdCol">
+        pcmid,tpcmid,uid
+    </sql>
+
+    <select id="findByPcmid" resultType="com.tcm.community.model.PostCc">
+        select <include refid="allCol"></include>
+         from tcm_post_cc
+         where pcmid=#{pcmid};
+    </select>
+</mapper>

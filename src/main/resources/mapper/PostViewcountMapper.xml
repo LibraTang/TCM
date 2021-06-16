@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tcm.community.mapper.PostViewcountMapper">
+    <sql id="allCol">
+        pvid,pid,viewcount
+    </sql>
+    <sql id="noIdCol">
+        pid,viewcount
+    </sql>
+
+    <select id="findByPid" resultType="com.tcm.community.model.PostViewcount">
+        select <include refid="allCol"></include>
+         from tcm_post_viewcount
+         where pid=#{pid};
+    </select>
+
+    <!--insert-->
+    <insert id="insertPostViewcount" parameterType="com.tcm.community.model.PostViewcount">
+        <!--after operation:get uid-->
+        <selectKey keyProperty="pvid" keyColumn="pvid" order="AFTER" resultType="Long">
+            select last_insert_id();
+        </selectKey>
+        insert into tcm_post_viewcount (<include refid="noIdCol"></include>)
+        values (#{pid},#{viewcount});
+    </insert>
+</mapper>

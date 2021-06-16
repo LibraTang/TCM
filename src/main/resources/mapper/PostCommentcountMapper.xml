@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tcm.community.mapper.PostCommentcountMapper">
+    <sql id="allCol">
+        pccid,pid,count
+    </sql>
+    <sql id="noIdCol">
+        pid,count
+    </sql>
+
+    <select id="findByPid" resultType="com.tcm.community.model.PostCommentcount">
+        select <include refid="allCol"></include>
+         from tcm_post_commentcount
+         where pid=#{pid};
+    </select>
+
+    <!--insert-->
+    <insert id="insertPostCommentcount" parameterType="com.tcm.community.model.PostCommentcount">
+        <!--after operation:get uid-->
+        <selectKey keyProperty="pccid" keyColumn="pccid" order="AFTER" resultType="Long">
+            select last_insert_id();
+        </selectKey>
+        insert into tcm_post_commentcount (<include refid="noIdCol"></include>)
+        values (#{pid},#{count});
+    </insert>
+    
+    <!--update-->
+    <update id="updatePostCommentcount" parameterType="com.tcm.community.model.PostCommentcount">
+        update tcm_post_commentcount set pid=#{pid},count=#{count} where pccid=#{pccid};
+    </update>
+</mapper>

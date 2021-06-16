@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tcm.community.mapper.UserFollowMapper">
+    <sql id="allCol">
+        ufid,uid,fid,optime,isdel
+    </sql>
+    <sql id="noIdCol">
+        uid,fid,optime,isdel
+    </sql>
+
+    <!--select-->
+    <select id="findByUidFid" parameterType="Integer" resultType="com.tcm.community.model.UserFollow">
+        select <include refid="allCol"></include>
+         from tcm_user_follow
+         where uid=#{uid} and fid=#{fid} and isdel=0;
+    </select>
+    <select id="getAttentionSet" parameterType="Integer" resultType="Integer">
+        select uid
+         from tcm_user_follow
+         where fid=#{uid} and isdel=0;
+    </select>
+    <select id="getFollowSet" parameterType="Integer" resultType="Integer">
+        select fid
+         from tcm_user_follow
+         where uid=#{uid} and isdel=0;
+    </select>
+    <select id="getFollowCount" parameterType="Integer" resultType="Integer">
+        select count(uid)
+         from tcm_user_follow
+         where uid=#{uid} and isdel=0;
+    </select>
+    <select id="getAttentionCount" parameterType="Integer" resultType="Integer">
+        select count(fid)
+         from tcm_user_follow
+         where fid=#{uid} and isdel=0;
+    </select>
+
+    <!--insert-->
+    <insert id="insertUserFollow" parameterType="com.tcm.community.model.UserFollow">
+        <!--after operation:get uid-->
+        <selectKey keyProperty="ufid" keyColumn="ufid" order="AFTER" resultType="Integer">
+            select last_insert_id();
+        </selectKey>
+        insert into tcm_user_follow (<include refid="noIdCol"></include>)
+        values (#{uid},#{fid},now(),0);
+    </insert>
+
+    <!--update-->
+    <update id="deleteUserFollow" parameterType="Integer">
+        update tcm_user_follow set isdel=1,optime=now() where uid=#{uid} and fid=#{fid};
+    </update>
+
+</mapper>

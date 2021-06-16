@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>首页</title>
+</head>
+<body>
+<div>
+    <div class="navbar" id="navbar">
+        <ul>
+            <li>
+                <a href="/">首页</a>
+            </li>
+            <li>
+                <a href="/">消息</a>
+            </li>
+            <li>
+                <a href="registerpg">注册</a>
+            </li>
+            <li>
+                <a href="loginpg">登录</a>
+            </li>
+            <li>
+                <div>
+                    <a href="homepagepg">个人主页</a>
+                    <a href="detailinfopg">资料修改</a>
+                    <a onclick="udelete()">账号删除</a>
+                    <a onclick="logout()">退出登录</a>
+                    <input type="text" id="token" name="token" placeholder="token">
+                </div>
+            </li>
+        </ul>
+        <form method="get" action="">
+            <input type="search" name="keyword" value=""/>
+            <button type="submit">搜索</button>
+        </form>
+    </div>
+</div>
+
+<div>
+    <div>
+        <button type="button" class="publishbutton">我要发布</button>
+    </div>
+    <form method="post" action="user/userinfo" >
+        <div>
+            <label>age:</label>
+            <div>
+                <input type="text" id="age" name="age" placeholder="age!" required>
+            </div>
+        </div>
+        <div>
+            <label>email:</label>
+            <div>
+                <input type="text" id="email" name="email" placeholder="email!" required>
+            </div>
+        </div>
+        <div>
+            <label>province:</label>
+            <div>
+                <input type="text" id="province" name="province" placeholder="province!" required>
+            </div>
+        </div>
+        <div>
+            <label>city:</label>
+            <div>
+                <input type="text" id="city" name="city" placeholder="city!" required>
+            </div>
+        </div>
+        <div>
+            <label>location:</label>
+            <div>
+                <input type="text" id="location" name="location" placeholder="location!" required>
+            </div>
+        </div>
+        <div>
+            <label>selfintro:</label>
+            <div>
+                <input type="text" id="selfintro" name="selfintro" placeholder="selfintro!" required>
+            </div>
+        </div>
+        <div>
+            <label>tag:</label>
+            <div>
+                <input type="text" id="tag" name="tag" placeholder="tag!" required>
+            </div>
+        </div>
+        <div>
+            <button type="button" onclick="changeinfo()">change</button>
+        </div>
+    </form>
+    <div>
+        <input type="text" id="sex" name="sex" placeholder="sex!" required>
+        <button type="button" onclick="changesex()">change sex</button>
+    </div>
+    <div>
+        <input type="text" id="isidenti" name="isidenti" placeholder="isidenti!" required>
+        <button type="button" onclick="changeisid()">change isidenti</button>
+    </div>
+    <div>
+        <input type="text" id="oldpword" name="oldpword" placeholder="oldpword!" required>
+        <input type="text" id="newpword" name="newpword" placeholder="newpword!" required>
+        <button type="button" onclick="changepw()">change</button>
+    </div>
+    <h5 id="data"></h5>
+</div>
+<script>
+    function changesex(){
+        const token = document.getElementById("token");
+        const sex = document.getElementById("sex");
+        var xmlhttp;
+        if (window.XMLHttpRequest)
+        {// code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp=new XMLHttpRequest();
+        }
+        else
+        {// code for IE6, IE5
+            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.open("POST","user/usersex",true);
+        xmlhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded")
+        xmlhttp.send("token="+token.value+"&sex="+sex.value);
+
+        xmlhttp.onreadystatechange=function()
+        {
+            if (xmlhttp.readyState==4 && xmlhttp.status==200)
+            {
+                document.getElementById("data").innerHTML = xmlhttp.responseText;
+                var obj = JSON.parse(xmlhttp.responseText);
+                //alert(JSON.stringify(obj));
+                //alert(obj.usernameMsg);
+
+                if(obj.returnMsg == "true"){
+                    alert("success!");
+                    window.location.href="detailinfopg";
+                }else{
+                    alert("fail!");
+                    window.location.href="detailinfopg";
+                }
+            }
+        }
+    }
+    function changeisid(){
+        const token = document.getElementById("token");
+        const isidenti = document.getElementById("isidenti");
+        var xmlhttp;
+        if (window.XMLHttpRequest)
+        {// code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp=new XMLHttpRequest();
+        }
+        else
+        {// code for IE6, IE5
+            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.open("POST","user/useridenti",true);
+        xmlhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded")
+        xmlhttp.send("token="+token.value+"&isidenti="+isidenti.value);
+
+        xmlhttp.onreadystatechange=function()
+        {
+            if (xmlhttp.readyState==4 && xmlhttp.status==200)
+            {
+                document.getElementById("data").innerHTML = xmlhttp.responseText;
+                var obj = JSON.parse(xmlhttp.responseText);
+                //alert(JSON.stringify(obj));
+                //alert(obj.usernameMsg);
+
+                if(obj.returnMsg == "true"){
+                    alert("success!");
+                    window.location.href="detailinfopg";
+                }else{
+                    alert("fail!");
+                    window.location.href="detailinfopg";
+                }
+            }
+        }
+    }
+    function changepw(){
+        const token = document.getElementById("token");
+        const oldpword = document.getElementById("oldpword");
+        const newpword = document.getElementById("newpword");
+        var xmlhttp;
+        if (window.XMLHttpRequest)
+        {// code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp=new XMLHttpRequest();
+        }
+        else
+        {// code for IE6, IE5
+            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.open("POST","user/changepd",true);
+        xmlhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded")
+        xmlhttp.send("token="+token.value+"&oldpword="+oldpword.value+"&newpword="+newpword.value);
+
+        xmlhttp.onreadystatechange=function()
+        {
+            if (xmlhttp.readyState==4 && xmlhttp.status==200)
+            {
+                document.getElementById("data").innerHTML = xmlhttp.responseText;
+                var obj = JSON.parse(xmlhttp.responseText);
+                //alert(JSON.stringify(obj));
+                //alert(obj.usernameMsg);
+
+                if(obj.returnMsg == "true"){
+                    alert("success!");
+                    window.location.href="detailinfopg";
+                }else{
+                    alert("fail!");
+                }
+            }
+        }
+    }
+    function changeinfo(){
+        const token = document.getElementById("token");
+        const age = document.getElementById("age");
+        const email = document.getElementById("email");
+        const province = document.getElementById("province");
+        const city = document.getElementById("city");
+        const location = document.getElementById("location");
+        const selfintro = document.getElementById("selfintro");
+        const tag = document.getElementById("tag");
+        var xmlhttp;
+        if (window.XMLHttpRequest)
+        {// code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp=new XMLHttpRequest();
+        }
+        else
+        {// code for IE6, IE5
+            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.open("POST","user/userinfo",true);
+        xmlhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded")
+        xmlhttp.send("token="+token.value+"&age="+age.value+"&email="+email.value+"&province="+province.value+"&city="+city.value+"&location="+location.value+"&selfintro="+selfintro.value+"&tag="+tag.value);
+
+        xmlhttp.onreadystatechange=function()
+        {
+            if (xmlhttp.readyState==4 && xmlhttp.status==200)
+            {
+                document.getElementById("data").innerHTML = xmlhttp.responseText;
+                var obj = JSON.parse(xmlhttp.responseText);
+                //alert(JSON.stringify(obj));
+                //alert(obj.usernameMsg);
+
+                if(obj.returnMsg == "true"){
+                    alert("success!");
+                    window.location.href="detailinfopg";
+                }else{
+                    alert("fail!");
+                }
+            }
+        }
+    }
+    function logout(){
+        const token = document.getElementById("token");
+        var xmlhttp;
+        if (window.XMLHttpRequest)
+        {// code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp=new XMLHttpRequest();
+        }
+        else
+        {// code for IE6, IE5
+            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.open("POST","logout",true);
+        xmlhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded")
+        xmlhttp.send("token="+token.value);
+
+        xmlhttp.onreadystatechange=function()
+        {
+            if (xmlhttp.readyState==4 && xmlhttp.status==200)
+            {
+                document.getElementById("data").innerHTML = xmlhttp.responseText;
+                var obj = JSON.parse(xmlhttp.responseText);
+                //alert(JSON.stringify(obj));
+                //alert(obj.usernameMsg);
+
+                if(obj.returnMsg == "true"){
+                    alert("success!");
+                    window.location.href="/";
+                }else{
+                    alert("fail!");
+                    window.location.href="/";
+                }
+            }
+        }
+    }
+    function udelete(){
+        const token = document.getElementById("token");
+        var xmlhttp;
+        if (window.XMLHttpRequest)
+        {// code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp=new XMLHttpRequest();
+        }
+        else
+        {// code for IE6, IE5
+            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.open("POST","delete",true);
+        xmlhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded")
+        xmlhttp.send("token="+token.value);
+
+        xmlhttp.onreadystatechange=function()
+        {
+            if (xmlhttp.readyState==4 && xmlhttp.status==200)
+            {
+                document.getElementById("data").innerHTML = xmlhttp.responseText;
+                var obj = JSON.parse(xmlhttp.responseText);
+                //alert(JSON.stringify(obj));
+                //alert(obj.usernameMsg);
+
+                if(obj.returnMsg == "true"){
+                    alert("success!");
+                    window.location.href="/";
+                }else{
+                    alert("fail!");
+                    window.location.href="/";
+                }
+            }
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tcm.community.mapper.UserTokenMapper">
+    <sql id="allCol">
+        utid,uid,token,expired,status,logintime
+    </sql>
+    <sql id="noIdCol">
+        uid,token,expired,status,logintime
+    </sql>
+
+    <!--select-->
+    <select id="findByUid" parameterType="Integer" resultType="com.tcm.community.model.UserToken">
+        select <include refid="allCol"></include>
+         from tcm_user_token
+         where uid=#{uid};
+    </select>
+    <select id="findByToken" parameterType="String" resultType="com.tcm.community.model.UserToken">
+        select <include refid="allCol"></include>
+         from tcm_user_token
+         where token=#{token};
+    </select>
+
+    <!--insert-->
+    <insert id="insertUserToken" parameterType="com.tcm.community.model.UserToken">
+        <!--after operation:get uid-->
+        <selectKey keyProperty="utid" keyColumn="utid" order="AFTER" resultType="Long">
+            select last_insert_id();
+        </selectKey>
+        insert into tcm_user_token (<include refid="noIdCol"></include>)
+        values (#{uid},#{token},#{expired},#{status},#{logintime});
+    </insert>
+
+    <!--update-->
+    <update id="updateUserToken" parameterType="com.tcm.community.model.UserToken">
+        update tcm_user_token
+         set token=#{token},expired=#{expired},status=#{status},logintime=#{logintime}
+         where uid=#{uid};
+    </update>
+
+</mapper>

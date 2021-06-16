@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tcm.community.mapper.NotifyMapper">
+    <sql id="allCol">
+        nid,type,isread,time
+    </sql>
+    <sql id="noIdCol">
+        type,isread,time
+    </sql>
+
+    <select id="findAll" resultType="com.tcm.community.model.Notify">
+        select * from tcm_notify;
+    </select>
+</mapper>

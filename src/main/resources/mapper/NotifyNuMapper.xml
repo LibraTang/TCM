@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tcm.community.mapper.NotifyNuMapper">
+    <sql id="allCol">
+        nuid,nid,uid
+    </sql>
+    <sql id="noIdCol">
+        nid,uid
+    </sql>
+
+    <select id="findAll" resultType="com.tcm.community.model.NotifyNu">
+        select * from tcm_notify_nu;
+    </select>
+</mapper>

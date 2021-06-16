@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tcm.community.mapper.PostBravocountMapper">
+    <sql id="allCol">
+        pbvid,pid,bravocount
+    </sql>
+    <sql id="noIdCol">
+        pid,bravocount
+    </sql>
+
+    <select id="findByPid" resultType="com.tcm.community.model.PostBravocount">
+        select <include refid="allCol"></include>
+         from tcm_post_bravocount
+         where pid=#{pid};
+    </select>
+
+    <!--insert-->
+    <insert id="insertPostBravocount" parameterType="com.tcm.community.model.PostBravocount">
+        <!--after operation:get uid-->
+        <selectKey keyProperty="pbvid" keyColumn="pbvid" order="AFTER" resultType="Long">
+            select last_insert_id();
+        </selectKey>
+        insert into tcm_post_bravocount (<include refid="noIdCol"></include>)
+        values (#{pid},#{bravocount});
+    </insert>
+</mapper>

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>首页</title>
+</head>
+<body>
+<div>
+    <div class="navbar" id="navbar">
+        <img src="headpic/header/1h.png"  />
+        <ul>
+            <li>
+                <a href="/">首页</a>
+            </li>
+            <li>
+                <a href="/">消息</a>
+            </li>
+            <li>
+                <a href="registerpg">注册</a>
+            </li>
+            <li>
+                <a href="loginpg">登录</a>
+            </li>
+            <li>
+                <div>
+                    <a href="homepagepg">个人主页</a>
+                    <a href="detailinfopg">资料修改</a>
+                    <a onclick="udelete()">账号删除</a>
+                    <a onclick="logout()">退出登录</a>
+                    <input type="text" id="token" name="token" placeholder="token">
+                </div>
+            </li>
+        </ul>
+        <form method="get" action="">
+            <input type="search" name="keyword" value=""/>
+            <button type="submit">搜索</button>
+        </form>
+    </div>
+</div>
+
+<div>
+    <div>
+        <button type="button" class="publishbutton">我要发布</button>
+    </div>
+    <h5 id="data"></h5>
+</div>
+<script>
+    function logout(){
+        const token = document.getElementById("token");
+        var xmlhttp;
+        if (window.XMLHttpRequest)
+        {// code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp=new XMLHttpRequest();
+        }
+        else
+        {// code for IE6, IE5
+            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.open("POST","logout",true);
+        xmlhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded")
+        xmlhttp.send("token="+token.value);
+
+        xmlhttp.onreadystatechange=function()
+        {
+            if (xmlhttp.readyState==4 && xmlhttp.status==200)
+            {
+                document.getElementById("data").innerHTML = xmlhttp.responseText;
+                var obj = JSON.parse(xmlhttp.responseText);
+                //alert(JSON.stringify(obj));
+                //alert(obj.usernameMsg);
+
+                if(obj.returnMsg == "true"){
+                    alert("success!");
+                    window.location.href="/";
+                }else{
+                    alert("fail!");
+                    window.location.href="/";
+                }
+            }
+        }
+    }
+    function udelete(){
+        const token = document.getElementById("token");
+        var xmlhttp;
+        if (window.XMLHttpRequest)
+        {// code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp=new XMLHttpRequest();
+        }
+        else
+        {// code for IE6, IE5
+            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.open("POST","delete",true);
+        xmlhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded")
+        xmlhttp.send("token="+token.value);
+
+        xmlhttp.onreadystatechange=function()
+        {
+            if (xmlhttp.readyState==4 && xmlhttp.status==200)
+            {
+                document.getElementById("data").innerHTML = xmlhttp.responseText;
+                var obj = JSON.parse(xmlhttp.responseText);
+                //alert(JSON.stringify(obj));
+                //alert(obj.usernameMsg);
+
+                if(obj.returnMsg == "true"){
+                    alert("success!");
+                    window.location.href="/";
+                }else{
+                    alert("fail!");
+                    window.location.href="/";
+                }
+            }
+        }
+    }
+</script>
+</body>
+</html>

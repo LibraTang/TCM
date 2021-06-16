@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tcm.community.mapper.UserRecommendMapper">
+    <sql id="allCol">
+        urid, uid, type, answerNumber, rate, ctime, utime, mark
+    </sql>
+    <sql id="noIdCol">
+        uid, type, answerNumber, rate, ctime, utime, mark
+    </sql>
+
+    <!--select-->
+    <select id="findByUid" parameterType="Integer" resultType="com.tcm.community.model.UserRecommend">
+        select <include refid="allCol"></include>
+        from tcm_user_recommend
+        where uid=#{uid}
+    </select>
+    <select id="listByType" parameterType="Integer" resultType="com.tcm.community.model.UserRecommend">
+        select <include refid="allCol"></include>
+        from tcm_user_recommend
+        where type=#{type};
+    </select>
+
+    <!--insert-->
+    <insert id="insertUserRecommend" parameterType="com.tcm.community.model.UserRecommend">
+        <!--after operation:get urid-->
+        <selectKey keyProperty="urid" order="AFTER" resultType="Integer">
+            select last_insert_id();
+        </selectKey>
+        insert into tcm_user_recommend (<include refid="noIdCol"></include>)
+        values (#{uid},#{type},#{answerNumber},#{rate},now(),now(),0);
+    </insert>
+
+    <!--update-->
+    <update id="updateUserRecommendByUid" parameterType="com.tcm.community.model.UserRecommend">
+        update tcm_user_recommend set type=#{type},answerNumber=#{answerNumber},rate=#{rate},utime=now() where uid=#{uid};
+    </update>
+    <update id="updateUserTypeByUid">
+        update tcm_user_recommend set type=
+    </update>
+
+</mapper>

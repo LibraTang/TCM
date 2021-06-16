@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tcm.community.mapper.TlMapper">
+    <sql id="allCol">
+        tlid,title,intro,isdel,ctime,mtime
+    </sql>
+    <sql id="noIdCol">
+        title,intro,isdel,ctime,mtime
+    </sql>
+
+    <!--select-->
+    <select id="getVisitorHomepage" resultType="com.tcm.community.model.Tl">
+        select <include refid="allCol"></include>
+         from tcm_tl
+         where isdel != 1
+         order by mtime desc
+         limit #{offset},#{limit};
+    </select>
+    <select id="getTlCount" resultType="Integer">
+        select count(tlid)
+         from tcm_tl
+         where isdel != 1;
+    </select>
+
+
+</mapper>

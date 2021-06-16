@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tcm.community.mapper.UserSurveyMapper">
+    <sql id="allCol">
+        usid, uid, wearMore, hot, cold, irritation, getInflamed, shit, pee, waist, appetite, sleep, ctime, utime, mark
+    </sql>
+    <sql id="noIdCol">
+        uid, wearMore, hot, cold, irritation, getInflamed, shit, pee, waist, appetite, sleep, ctime, utime, mark
+    </sql>
+
+    <!--select-->
+    <select id="findByUid" parameterType="Integer" resultType="com.tcm.community.model.UserSurvey">
+        select <include refid="allCol"></include>
+        from tcm_user_survey
+        where uid=#{uid};
+    </select>
+
+    <!--insert-->
+    <insert id="insertUserSurvey" parameterType="com.tcm.community.model.UserSurvey">
+        <!--after operation:get usid-->
+        <selectKey keyProperty="usid" order="AFTER" resultType="Integer">
+            select last_insert_id();
+        </selectKey>
+        insert into tcm_user_survey (<include refid="noIdCol"></include>)
+        values (#{uid}, #{wearMore}, #{hot}, #{cold}, #{irritation}, #{getInflamed},
+        #{shit}, #{pee}, #{waist}, #{appetite}, #{sleep}, now(), now(), 0)
+        ON DUPLICATE KEY
+        UPDATE wearMore=#{wearMore}, hot=#{hot}, cold=#{cold}, irritation=#{irritation},
+        getInflamed=#{getInflamed}, shit=#{shit}, pee=#{pee}, waist=#{waist}, appetite=#{appetite},
+        sleep=#{sleep}, utime=now();
+    </insert>
+
+    <!--update-->
+    <update id="updateUserSurvey" parameterType="com.tcm.community.model.UserSurvey">
+        update tcm_user_survey set wearMore=#{wearMore}, hot=#{hot}, cold=#{cold}, irritation=#{irritation},
+        getInflamed=#{getInflamed}, shit=#{shit}, pee=#{pee}, waist=#{waist}, appetite=#{appetite},
+        sleep=#{sleep}, utime=now() where usid=#{usid};
+    </update>
+
+</mapper>

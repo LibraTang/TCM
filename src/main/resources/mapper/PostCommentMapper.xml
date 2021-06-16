@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tcm.community.mapper.PostCommentMapper">
+    <sql id="allCol">
+        pcmid,detail,isdel,ctime,bravo,img,mtime,commenttype
+    </sql>
+    <sql id="noIdCol">
+        detail,isdel,ctime,bravo,img,mtime,commenttype
+    </sql>
+
+    <!--select-->
+    <select id="findCommentByPcmid" resultType="com.tcm.community.model.PostComment">
+        select <include refid="allCol"></include>
+         from tcm_post_comment
+         where pcmid=#{pcmid} and isdel=0;
+    </select>
+
+    <!--insert-->
+    <insert id="insertPostComment" parameterType="com.tcm.community.model.PostComment">
+        <!--after operation:get uid-->
+        <selectKey keyProperty="pcmid" order="AFTER" resultType="Long">
+            select last_insert_id();
+        </selectKey>
+        insert into tcm_post_comment (<include refid="noIdCol"></include>)
+        values (#{detail},0,now(),#{bravo},#{img},now(),#{commenttype});
+    </insert>
+</mapper>

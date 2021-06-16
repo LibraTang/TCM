@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tcm.community.mapper.ChatMapper">
+    <sql id="allCol">
+        cid,fuid,tuid,chatid,content,status,ctime
+    </sql>
+    <sql id="noIdCol">
+        fuid,tuid,chatid,content,status,ctime
+    </sql>
+
+    <!--select-->
+    <select id="findChat" resultType="com.tcm.community.model.Chat">
+        select <include refid="allCol"></include>
+         from tcm_chat
+         where cid in (
+             select max(cid) from tcm_chat
+              where status != 2
+              and fuid != 1
+              and (fuid=#{uid} or tuid=#{uid})
+              group by chatid
+         )
+         order by cid desc
+         limit #{offset},#{limit};
+    </select>
+    <select id="findChatCount" resultType="Integer">
+        select count(cid)
+         from tcm_chat
+         where cid in (
+             select max(cid) from tcm_chat
+              where status != 2
+              and fuid != 1
+              and (fuid=#{uid} or tuid=#{uid})
+              group by chatid
+         )
+    </select>
+    <select id="findContents" resultType="com.tcm.community.model.Chat">
+        select <include refid="allCol"></include>
+         from tcm_chat
+         where status != 2
+         and fuid != 1
+         and chatid=#{chatid}
+         order by cid desc
+         limit #{offset},#{limit};
+    </select>
+    <select id="findContentsCount" resultType="Integer">
+        select count(cid)
+         from tcm_chat
+         where status != 2
+         and fuid != 1
+         and chatid=#{chatid};
+    </select>
+    <select id="findUnreadContentsCount" resultType="Integer">
+        select count(cid)
+         from tcm_chat
+         where status = 0
+         and fuid != 1
+         and tuid =#{uid}
+         <if test="chatid!=null">
+         and chatid=#{chatid};
+         </if>
+    </select>
+
+    <!--insert-->
+    <insert id="insertChat" parameterType="com.tcm.community.model.Chat">
+        <selectKey keyProperty="cid" keyColumn="cid" order="AFTER" resultType="Integer">
+            select last_insert_id();
+        </selectKey>
+        insert into tcm_chat (<include refid="noIdCol"></include>)
+        values (#{fuid},#{tuid},#{chatid},#{content},#{status},#{ctime});
+    </insert>
+
+    <!--update-->
+    <update id="updateStatus" parameterType="com.tcm.community.model.Chat">
+        update tcm_chat set status=#{status}
+         where cid in
+        <foreach collection="cids" item="cid" open="(" separator="," close=")">
+            #{cid}
+        </foreach>
+    </update>
+
+
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tcm.community.mapper.UserInfoMapper">
+    <sql id="allCol">
+        uiid,ctime,age,sex,email,province,city,region,location,selfintro,pic,tag,isidenti,type
+    </sql>
+    <sql id="noIdCol">
+        ctime,age,sex,email,province,city,region,location,selfintro,pic,tag,isidenti,type
+    </sql>
+
+    <!--select-->
+    <select id="findByUiid" parameterType="Integer" resultType="com.tcm.community.model.UserInfo">
+        select <include refid="allCol"></include>
+         from tcm_user_info
+         where uiid=#{uiid};
+    </select>
+    <select id="listUserInfoByUiid" parameterType="Integer" resultType="com.tcm.community.model.UserInfo">
+        select <include refid="allCol"></include>
+        from tcm_user_info
+        where uiid in
+        <foreach collection="list" index="index" item="uiid" open="(" separator="," close=")">
+            #{uiid}
+        </foreach>
+    </select>
+
+    <!--insert-->
+    <insert id="insertUserInfo" parameterType="com.tcm.community.model.UserInfo">
+        <!--after operation:get uid-->
+        <selectKey keyProperty="uiid" keyColumn="uiid" order="AFTER" resultType="Integer">
+            select last_insert_id();
+        </selectKey>
+        insert into tcm_user_info (<include refid="noIdCol"></include>)
+         values (#{ctime},#{age},#{sex},#{email},#{province},#{city},#{region},#{location},#{selfintro},#{pic},#{tag},#{isidenti},#{type});
+    </insert>
+
+    <!--update-->
+    <update id="updateUserInfo" parameterType="com.tcm.community.model.UserInfo">
+        update tcm_user_info set age=#{age},sex=#{sex},email=#{email},province=#{province},city=#{city},region=#{region},location=#{location},selfintro=#{selfintro},tag=#{tag},type=#{type} where uiid=#{uiid};
+    </update>
+    <update id="updateUserSex" parameterType="com.tcm.community.model.UserInfo">
+        update tcm_user_info set sex=#{sex} where uiid=#{uiid};
+    </update>
+    <update id="updateUserIsidenti" parameterType="com.tcm.community.model.UserInfo">
+        update tcm_user_info set isidenti=#{isidenti} where uiid=#{uiid};
+    </update>
+    <update id="updateUserHeader" parameterType="com.tcm.community.model.UserInfo">
+        update tcm_user_info set pic=#{pic} where uiid=#{uiid};
+    </update>
+
+</mapper>

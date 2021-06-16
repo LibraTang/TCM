@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tcm.community.mapper.UserAinfoMapper">
+    <sql id="allCol">
+        uaid,uid,uiid
+    </sql>
+    <sql id="noIdCol">
+        uid,uiid
+    </sql>
+
+    <!--select-->
+    <select id="findByUid" parameterType="Integer" resultType="com.tcm.community.model.UserAinfo">
+        select <include refid="allCol"></include>
+         from tcm_user_ainfo
+         where uid=#{uid};
+    </select>
+    <select id="listUiidByUid" parameterType="Integer" resultType="java.lang.Integer">
+        select uiid from tcm_user_ainfo where uid in
+        <foreach collection="list" index="index" item="uid" open="(" separator="," close=")">
+            #{uid}
+        </foreach>
+    </select>
+
+    <!--insert-->
+    <insert id="insertUserAinfo" parameterType="com.tcm.community.model.UserAinfo">
+        <!--after operation:get uid-->
+        <selectKey keyProperty="uaid" keyColumn="uaid" order="AFTER" resultType="Integer">
+            select last_insert_id();
+        </selectKey>
+        insert into tcm_user_ainfo (<include refid="noIdCol"></include>)
+        values (#{uid},#{uiid});
+    </insert>
+
+</mapper>

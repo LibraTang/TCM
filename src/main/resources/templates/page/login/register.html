@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href=""/>
+    <link rel="stylesheet" href="" />
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript" src="js/axios.js"></script>
+    <title>注册</title>
+</head>
+<body>
+<div class="main">
+    <form method="post" action="register" >
+        <div>
+            <label>账号:</label>
+            <div>
+                <input type="text" id="uname" name="uname" placeholder="请输入您的账号!" required>
+            </div>
+        </div>
+        <div>
+            <label>密码:</label>
+            <div>
+                <input type="password" id="pword" name="pword" placeholder="请输入您的密码!" required>
+            </div>
+        </div>
+        <div>
+            <label>auth:</label>
+            <div>
+                <input type="text" id="auth" name="auth" placeholder="please auth" required>
+            </div>
+        </div>
+        <div>
+            <button type="submit" onclick="return post()">立即注册</button>
+        </div>
+    </form>
+    <!-- 内容 -->
+    <div>
+        <h5 id="data"></h5>
+    </div>
+</div>
+<script>
+    function post(){
+        const uname = document.getElementById("uname");
+        const pword = document.getElementById("pword");
+        const auth = document.getElementById("auth");
+        let xmlhttp;
+        if (window.XMLHttpRequest)
+        {// code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp=new XMLHttpRequest();
+        }
+        else
+        {// code for IE6, IE5
+            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.open("POST","register",true);
+        xmlhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded")
+        xmlhttp.send("uname="+uname.value+"&pword="+pword.value+"&auth="+auth.value);
+
+        xmlhttp.onreadystatechange=function()
+        {
+            if (xmlhttp.readyState==4 && xmlhttp.status==200)
+            {
+                document.getElementById("data").innerHTML = xmlhttp.responseText;
+                var obj = JSON.parse(xmlhttp.responseText);
+
+                //alert(obj.usernameMsg);
+
+                if(obj.returnMsg == "true"){
+                    alert("success!");
+                    window.location.href="loginpg";
+                }else{
+                    alert(JSON.stringify(obj));
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+</script>
+</body>
+</html>

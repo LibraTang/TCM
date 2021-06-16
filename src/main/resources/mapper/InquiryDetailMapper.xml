@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tcm.community.mapper.InquiryDetailMapper">
+    <sql id="allCol">
+        idid,uid,content,type,doctor,ctime,utime,mark
+    </sql>
+    <sql id="noIdCol">
+        uid,content,type,doctor,ctime,utime,mark
+    </sql>
+
+    <!--select-->
+    <select id="getInquiryDetailByIdid" parameterType="Integer" resultType="com.tcm.community.model.InquiryDetail">
+        select <include refid="allCol"></include>
+        from tcm_inquiry_detail
+        where idid=#{idid}
+    </select>
+    <select id="getInquiryListByUid" parameterType="Integer" resultType="com.tcm.community.model.InquiryDetail">
+        select <include refid="allCol"></include>
+        from tcm_inquiry_detail
+        where uid=#{uid};
+    </select>
+    <select id="getInquiryListByDoctor" parameterType="Integer" resultType="com.tcm.community.model.InquiryDetail">
+        select <include refid="allCol"></include>
+        from tcm_inquiry_detail
+        where doctor=#{doctor}
+    </select>
+
+    <!--insert-->
+    <insert id="insertInquiryDetail" parameterType="com.tcm.community.model.InquiryDetail">
+        <!--after operation:get idid-->
+        <selectKey keyProperty="idid" order="AFTER" resultType="Integer">
+            select last_insert_id();
+        </selectKey>
+        insert into tcm_inquiry_detail (<include refid="noIdCol"></include>)
+        values (#{uid},#{content},#{type},#{doctor},now(),now(),0);
+    </insert>
+
+    <!--update-->
+
+</mapper>
